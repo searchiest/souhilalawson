@@ -296,15 +296,7 @@ Souhila delivered the sort of expansive vocabulary and 1-2-1 attention that enab
   </div>
   
   <div class="border-b border-gray-200">
-    <input 
-      type="email" 
-      name="email" 
-      id="emailInput" 
-      required 
-      placeholder="Email" 
-      oninput="this.style.color = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(this.value) ? '#4b5563' : (this.value === '' ? '#9ca3af' : '#dc2626')"
-      class="w-full py-4 px-2 outline-none focus:border-orange-400 transition-colors placeholder-gray-400 font-light bg-transparent"
-      style="color: #9ca3af;">
+    <input type="email" name="email" id="emailInput" required placeholder="Email" class="w-full py-4 px-2 outline-none focus:border-orange-400 transition-colors placeholder-gray-400 font-light bg-transparent">
   </div>
   
   <div class="border-b border-gray-200">
@@ -320,7 +312,6 @@ Souhila delivered the sort of expansive vocabulary and 1-2-1 attention that enab
   </button>
 </form>
 
-
 <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 z-[100] transform transition-all duration-500 pointer-events-none opacity-0 -translate-y-10">
     <div class="bg-[#F98B4F] text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-3 border-2 border-white/20 backdrop-blur-md">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -329,72 +320,7 @@ Souhila delivered the sort of expansive vocabulary and 1-2-1 attention that enab
         <div class="font-bold tracking-wide">Merci! Message sent successfully.</div>
     </div>
 </div>
-
-
-<script>
-    const contactForm = document.getElementById('contactForm');
-    const emailInput = document.getElementById('emailInput');
-    const toast = document.getElementById('toast');
-
-    // 1. The function lives OUTSIDE the listener
-    function showToast() {
-        console.log("Toast function triggered!"); 
-        if (!toast) {
-            console.error("Toast element not found in HTML! Check if <div id='toast'> exists.");
-            return;
-        }
-        toast.classList.remove('opacity-0', '-translate-y-10', 'pointer-events-none');
-        toast.classList.add('opacity-100', 'translate-y-0');
-
-        setTimeout(() => {
-            toast.classList.remove('opacity-100', 'translate-y-0');
-            toast.classList.add('opacity-0', '-translate-y-10', 'pointer-events-none');
-        }, 4000);
-    }
-
-    contactForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-
-        const isEmailValid = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(emailInput.value);
-        if (!isEmailValid) {
-            emailInput.classList.add('border-red-500');
-            setTimeout(() => emailInput.classList.remove('border-red-500'), 2000);
-            return;
-        }
-
-        const btn = document.getElementById('submitBtn');
-        const originalText = btn.innerText;
-        btn.innerText = "Envoi en cours...";
-        btn.disabled = true;
-
-        const formData = new FormData(contactForm);
-        const data = Object.fromEntries(formData.entries());
-
-        try {
-            // NOTE: Use the Production URL once you toggle the workflow to "Active" in n8n
-            const response = await fetch('https://jemima-ai.app.n8n.cloud/webhook/b9367373-9b16-4fa7-84ea-c63101e98573', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-
-            if (response.ok) {
-                console.log("Response OK, showing toast...");
-                showToast();
-                contactForm.reset();
-            } else {
-                throw new Error("Response not OK");
-            }
-        } catch (error) {
-            console.error("Submission error:", error);
-            alert("Connection error. Please try again or email me directly.");
-        } finally {
-            btn.innerText = originalText;
-            btn.disabled = false;
-        }
-    }); // This closing bracket was missing or misplaced!
-</script>
-            </div>
+     </div>
         </div>
     </section>
 
@@ -406,33 +332,34 @@ Souhila delivered the sort of expansive vocabulary and 1-2-1 attention that enab
 <script>
   const subjectSelect = document.getElementById('subject-select');
 
-  // 1. Create a map of Button IDs to the Option Text you want selected
   const linkMappings = {
     'study-link': 'I am interested in French for study',
     'adults-link': 'I am interested in French for Adults',
     'business-link': 'I am interested in French for Business'
   };
 
-  // 2. Loop through the map and attach the click events
   Object.keys(linkMappings).forEach(id => {
     const link = document.getElementById(id);
     if (link && subjectSelect) {
       link.addEventListener('click', function() {
-        // Set the value based on the ID clicked
+        // Set value
         subjectSelect.value = linkMappings[id];
         
-        // Update the styling to "active"
+        // Update Styles
         subjectSelect.classList.remove('text-gray-400');
-        subjectSelect.classList.add('text-gray-600', 'text-slate-800');
+        subjectSelect.classList.add('text-gray-600');
+        
+        // Force browser to recognize the change for form submission
+        subjectSelect.dispatchEvent(new Event('change'));
       });
     }
   });
 
-  // 3. Handle manual user selection color change
+  // Manual change listener
   if (subjectSelect) {
     subjectSelect.addEventListener('change', function() {
       this.classList.remove('text-gray-400');
-      this.classList.add('text-gray-600', 'text-slate-800');
+      this.classList.add('text-gray-600');
     });
   }
 </script>
