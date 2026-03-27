@@ -53,19 +53,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </style>
 
     <style>
-/* Mobile Contact Bar Styles */
 @media (max-width: 767px) {
-    .mobile-contact-bar {
-        display: flex;
-    }
-    /* Add padding to footer so the bar doesn't cover copyright text */
     footer {
-        padding-bottom: 5rem; 
-    }
-}
-@media (min-width: 768px) {
-    .mobile-contact-bar {
-        display: none;
+        padding-bottom: 5.5rem; /* Space for the buttons */
     }
 }
 
@@ -449,7 +439,7 @@ Souhila delivered the sort of expansive vocabulary and 1-2-1 attention that enab
     }
 </script>
 
-<div class="mobile-contact-bar fixed bottom-0 left-0 right-0 z-[100] bg-white/95 backdrop-blur-md border-t border-gray-200 p-3 shadow-[0_-5px_20px_rgba(0,0,0,0.1)] flex gap-3">
+<div class="fixed bottom-0 left-0 right-0 z-[100] bg-white/95 backdrop-blur-md border-t border-gray-200 p-3 shadow-[0_-5px_20px_rgba(0,0,0,0.1)] flex gap-3 md:hidden">
     
     <a href="tel:+447921525911" class="flex-1 brand-orange text-white flex items-center justify-center gap-2 py-3 rounded-xl font-bold transition active:scale-95">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
