@@ -404,26 +404,37 @@ Souhila delivered the sort of expansive vocabulary and 1-2-1 attention that enab
 
 
 <script>
-  // Assuming your link has id="study-link"
-  const studyLink = document.getElementById('study-link');
   const subjectSelect = document.getElementById('subject-select');
 
-  if (studyLink && subjectSelect) {
-    studyLink.addEventListener('click', function() {
-      // 1. Pre-select the option
-      subjectSelect.value = "I am interested in French for study";
-      
-      // 2. Change the text color from placeholder-gray to a darker gray or orange
-      subjectSelect.classList.remove('text-gray-400');
-      subjectSelect.classList.add('text-gray-600');
+  // 1. Create a map of Button IDs to the Option Text you want selected
+  const linkMappings = {
+    'study-link': 'I am interested in French for study',
+    'adults-link': 'I am interested in French for Adults',
+    'business-link': 'I am interested in French for Business'
+  };
+
+  // 2. Loop through the map and attach the click events
+  Object.keys(linkMappings).forEach(id => {
+    const link = document.getElementById(id);
+    if (link && subjectSelect) {
+      link.addEventListener('click', function() {
+        // Set the value based on the ID clicked
+        subjectSelect.value = linkMappings[id];
+        
+        // Update the styling to "active"
+        subjectSelect.classList.remove('text-gray-400');
+        subjectSelect.classList.add('text-gray-600', 'text-slate-800');
+      });
+    }
+  });
+
+  // 3. Handle manual user selection color change
+  if (subjectSelect) {
+    subjectSelect.addEventListener('change', function() {
+      this.classList.remove('text-gray-400');
+      this.classList.add('text-gray-600', 'text-slate-800');
     });
   }
-  
-  // Also change color if the user selects an option manually
-  subjectSelect.addEventListener('change', function() {
-    this.classList.remove('text-gray-400');
-    this.classList.add('text-gray-600');
-  });
 </script>
 
 </body>
