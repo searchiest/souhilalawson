@@ -273,23 +273,24 @@ Souhila delivered the sort of expansive vocabulary and 1-2-1 attention that enab
             <div class="w-full md:w-7/12 p-8 md:p-12">
 
 
-<form id="contactForm" class="space-y-0"> <div class="flex items-center border-b border-gray-200 py-1">
-<div class="flex items-center border-b border-gray-200 py-1">
-  <label for="subject-select" class="text-gray-400 w-24 py-3 px-2 whitespace-nowrap font-light">
-    Subject
-  </label>
-  <select 
-    id="subject-select" 
-    name="subject" 
-    required 
-    class="w-full py-3 pl-4 pr-2 outline-none focus:text-orange-400 bg-transparent transition-colors appearance-none text-gray-400 font-light cursor-pointer"
-  >
-    <option value="" disabled selected class="py-2">Please choose a subject</option>
-    <option value="I am interested in French for study" class="py-2">I am interested in French for study</option>
-    <option value="I am interested in French for Adults" class="py-2">I am interested in French for Adults</option>
-    <option value="I am interested in French for Business" class="py-2">I am interested in French for Business</option>
-  </select>
-</div>
+<form id="contactForm" class="space-y-0">
+  <div class="flex items-center border-b border-gray-200">
+    <label for="subject-select" class="text-gray-400 w-24 py-4 px-2 whitespace-nowrap font-light">
+      Subject
+    </label>
+    <select 
+      id="subject-select" 
+      name="subject" 
+      required 
+      class="w-full py-4 pl-6 pr-2 outline-none focus:text-orange-400 bg-transparent transition-colors appearance-none text-gray-400 font-light cursor-pointer"
+    >
+      <option value="" disabled selected>Please choose a subject</option>
+      <option value="I am interested in French for study">I am interested in French for study</option>
+      <option value="I am interested in French for Adults">I am interested in French for Adults</option>
+      <option value="I am interested in French for Business">I am interested in French for Business</option>
+    </select>
+  </div>
+
   <div class="border-b border-gray-200">
     <input type="text" name="name" required class="w-full py-4 px-2 outline-none focus:border-orange-400 placeholder-gray-400 font-light text-gray-600 bg-transparent" placeholder="Name">
   </div>
@@ -403,12 +404,25 @@ Souhila delivered the sort of expansive vocabulary and 1-2-1 attention that enab
 
 
 <script>
+  // Assuming your link has id="study-link"
   const studyLink = document.getElementById('study-link');
   const subjectSelect = document.getElementById('subject-select');
 
-  studyLink.addEventListener('click', function() {
-    // This sets the dropdown to the specific value you requested
-    subjectSelect.value = "I am interested in French for study";
+  if (studyLink && subjectSelect) {
+    studyLink.addEventListener('click', function() {
+      // 1. Pre-select the option
+      subjectSelect.value = "I am interested in French for study";
+      
+      // 2. Change the text color from placeholder-gray to a darker gray or orange
+      subjectSelect.classList.remove('text-gray-400');
+      subjectSelect.classList.add('text-gray-600');
+    });
+  }
+  
+  // Also change color if the user selects an option manually
+  subjectSelect.addEventListener('change', function() {
+    this.classList.remove('text-gray-400');
+    this.classList.add('text-gray-600');
   });
 </script>
 
