@@ -321,69 +321,6 @@ Souhila delivered the sort of expansive vocabulary and 1-2-1 attention that enab
     </div>
 </div>
 
-
-<script>
-    const contactForm = document.getElementById('contactForm');
-    const emailInput = document.getElementById('emailInput');
-    const toast = document.getElementById('toast');
-
-    // 1. The function lives OUTSIDE the listener
-    function showToast() {
-        console.log("Toast function triggered!"); 
-        if (!toast) {
-            console.error("Toast element not found in HTML! Check if <div id='toast'> exists.");
-            return;
-        }
-        toast.classList.remove('opacity-0', '-translate-y-10', 'pointer-events-none');
-        toast.classList.add('opacity-100', 'translate-y-0');
-
-        setTimeout(() => {
-            toast.classList.remove('opacity-100', 'translate-y-0');
-            toast.classList.add('opacity-0', '-translate-y-10', 'pointer-events-none');
-        }, 4000);
-    }
-
-    contactForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-
-        const isEmailValid = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(emailInput.value);
-        if (!isEmailValid) {
-            emailInput.classList.add('border-red-500');
-            setTimeout(() => emailInput.classList.remove('border-red-500'), 2000);
-            return;
-        }
-
-        const btn = document.getElementById('submitBtn');
-        const originalText = btn.innerText;
-        btn.innerText = "Envoi en cours...";
-        btn.disabled = true;
-
-        const formData = new FormData(contactForm);
-        const data = Object.fromEntries(formData.entries());
-
-        try {
-            // NOTE: Use the Production URL once you toggle the workflow to "Active" in n8n
-            const response = await fetch('https://jemima-ai.app.n8n.cloud/webhook/b9367373-9b16-4fa7-84ea-c63101e98573', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-
-            if (response.ok) {
-                console.log("Response OK, showing toast...");
-                showToast();
-                contactForm.reset();
-            } else {
-                throw new Error("Response not OK");
-            }
-        } catch (error) {
-            console.error("Submission error:", error);
-            alert("Connection error. Please try again or email me directly.");
-        } finally {
-            btn.innerText = originalText;
-            btn.disabled = false;
-        }
-    }); // This closing bracket was missing or misplaced!
 </script>
             </div>
         </div>
@@ -393,40 +330,103 @@ Souhila delivered the sort of expansive vocabulary and 1-2-1 attention that enab
         © 2026 Souhila Lawson | All Rights Reserved
     </footer>
 
-
 <script>
-  const subjectSelect = document.getElementById('subject-select');
+    // 1. Element Selectors
+    const contactForm = document.getElementById('contactForm');
+    const emailInput = document.getElementById('emailInput');
+    const toast = document.getElementById('toast');
+    const subjectSelect = document.getElementById('subject-select');
+    const submitBtn = document.getElementById('submitBtn');
 
-  const linkMappings = {
-    'study-link': 'I am interested in French for study',
-    'adults-link': 'I am interested in French for Adults',
-    'business-link': 'I am interested in French for Business'
-  };
+    // 2. Button Link Mappings (Study/Adults/Business)
+    const linkMappings = {
+        'study-link': 'I am interested in French for study',
+        'adults-link': 'I am interested in French for Adults',
+        'business-link': 'I am interested in French for Business'
+    };
 
-  Object.keys(linkMappings).forEach(id => {
-    const link = document.getElementById(id);
-    if (link && subjectSelect) {
-      link.addEventListener('click', function() {
-        // Set value
-        subjectSelect.value = linkMappings[id];
-        
-        // Update Styles
-        subjectSelect.classList.remove('text-gray-400');
-        subjectSelect.classList.add('text-gray-600');
-        
-        // Force browser to recognize the change for form submission
-        subjectSelect.dispatchEvent(new Event('change'));
-      });
-    }
-  });
-
-  // Manual change listener
-  if (subjectSelect) {
-    subjectSelect.addEventListener('change', function() {
-      this.classList.remove('text-gray-400');
-      this.classList.add('text-gray-600');
+    // 3. Attach Click Listeners to Top Buttons
+    Object.keys(linkMappings).forEach(id => {
+        const link = document.getElementById(id);
+        if (link && subjectSelect) {
+            link.addEventListener('click', function() {
+                subjectSelect.value = linkMappings[id];
+                subjectSelect.classList.remove('text-gray-400');
+                subjectSelect.classList.add('text-gray-600');
+                // Ensure the value "sticks" for the form submission
+                subjectSelect.dispatchEvent(new Event('change'));
+            });
+        }
     });
-  }
+
+    // 4. Toast Message Function
+    function showToast() {
+        if (!toast) return;
+        toast.classList.remove('opacity-0', '-translate-y-10', 'pointer-events-none');
+        toast.classList.add('opacity-100', 'translate-y-0');
+
+        setTimeout(() => {
+            toast.classList.remove('opacity-100', 'translate-y-0');
+            toast.classList.add('opacity-0', '-translate-y-10', 'pointer-events-none');
+        }, 4000);
+    }
+
+    // 5. Form Submission Logic
+    if (contactForm) {
+        contactForm.addEventListener('submit', async function(e) {
+            // STOP the page from reloading
+            e.preventDefault();
+
+            // Validate Email
+            const isEmailValid = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(emailInput.value);
+            if (!isEmailValid) {
+                emailInput.classList.add('border-red-500');
+                setTimeout(() => emailInput.classList.remove('border-red-500'), 2000);
+                return;
+            }
+
+            // Visual Loading State
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Envoi en cours...";
+            submitBtn.disabled = true;
+
+            // Gather Data
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('https://jemima-ai.app.n8n.cloud/webhook/b9367373-9b16-4fa7-84ea-c63101e98573', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    showToast();
+                    contactForm.reset();
+                    // Reset select color back to placeholder gray
+                    subjectSelect.classList.add('text-gray-400');
+                    subjectSelect.classList.remove('text-gray-600');
+                } else {
+                    throw new Error("Server error");
+                }
+            } catch (error) {
+                console.error("Submission error:", error);
+                alert("Merci for your patience. There was a connection error. Please try again.");
+            } finally {
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+    }
+
+    // 6. Manual Select Color Listener
+    if (subjectSelect) {
+        subjectSelect.addEventListener('change', function() {
+            this.classList.remove('text-gray-400');
+            this.classList.add('text-gray-600');
+        });
+    }
 </script>
 
 </body>
